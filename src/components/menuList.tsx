@@ -1,11 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from "@mui/material";
+import { Box, List, ListItem, ListItemButton, Typography } from "@mui/material";
 import Logo from "../../public/GUY-EXPRESS.png";
 
 const MenuList = () => {
@@ -33,38 +27,58 @@ const MenuList = () => {
           src={Logo}
           alt="Logo"
           style={{
-            width: "75%",
+            width: "85%",
             height: "auto",
             justifyContent: "center",
             borderRadius: "1rem",
           }}
         />
       </Box>
-      <List sx={{ text: "#282a2c" }}>
+
+      <List sx={{ color: "#282a2c", fontFamily: "Poppins, sans-serif" }}>
         <ListItem disablePadding>
           <ListItemButton
             component={Link}
             to="/"
             sx={{
               "&:hover": {
-                backgroundColor: "gray",
+                backgroundColor: "#b9b5b5",
               },
             }}
           >
-            <ListItemText primary="Página Inicial" />
+            <Typography
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                fontWeight: "bold",
+                fontSize: "1rem", // Ajuste o tamanho conforme necessário
+                color: "#282a2c",
+              }}
+            >
+              Página Inicial
+            </Typography>
           </ListItemButton>
         </ListItem>
+
         <ListItem disablePadding>
           <ListItemButton
             component={Link}
             to="/usuarios"
             sx={{
               "&:hover": {
-                backgroundColor: "gray",
+                backgroundColor: "#b9b5b5",
               },
             }}
           >
-            <ListItemText primary="Usuários" />
+            <Typography
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                color: "#282a2c",
+              }}
+            >
+              Usuários
+            </Typography>
           </ListItemButton>
         </ListItem>
       </List>
