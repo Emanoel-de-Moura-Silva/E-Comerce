@@ -5,7 +5,7 @@ import { Box, Button } from "@mui/material";
 interface DataTableProps<T extends GridValidRowModel> {
   columns: GridColDef<T>[];
   rows: T[];
-  getRowId?: (row: T) => string | number;
+  getRowId?: (row: T) => number;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
 }
@@ -24,12 +24,13 @@ function DataTable<T extends GridValidRowModel>({
     headerName: "Ações",
     width: 180,
     renderCell: (params) => (
-      <Box sx={{ display: "flex", gap: 1 }}>
+      <Box sx={{ display: "flex", gap: 1, paddingTop: "0.5rem" }}>
         <Button
           variant="contained"
           color="primary"
           size="small"
           onClick={() => onEdit?.(params.row)}
+          sx={{ backgroundColor: "#b9844e" }}
         >
           Editar
         </Button>

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import GetListUser from "../service/GetListUser";
 
 const columns: GridColDef<User>[] = [
-  { field: "id_usuario", headerName: "ID", width: 70 },
+  { field: "id", headerName: "ID", width: 70 },
   { field: "nome", headerName: "Nome", width: 180 },
   { field: "email", headerName: "Email", width: 240 },
   { field: "telefone", headerName: "Telefone", width: 170 },
@@ -24,6 +24,7 @@ const Usuarios = () => {
     const fetchUsers = async () => {
       try {
         const updatedRows = await GetListUser();
+        console.log(updatedRows);
         setUserList(updatedRows);
       } catch (error) {
         console.error("Erro ao buscar usuários:", error);
@@ -170,8 +171,12 @@ const Usuarios = () => {
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-        <Box sx={{ width: "57%" }}>
-          <DataTable columns={columns} rows={userList} />
+        <Box sx={{ width: "64%" }}>
+          <DataTable
+            columns={columns}
+            rows={userList}
+            getRowId={(row) => row.id}
+          />
         </Box>
       </Box>
     </Box>
