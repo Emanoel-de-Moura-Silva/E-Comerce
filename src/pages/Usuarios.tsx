@@ -61,15 +61,16 @@ const Usuarios = () => {
     return "deu certo ";
   };
 
-  const handleEdit = (user: User) => {
+  /*   const handleEdit = (user: User) => {
     console.log("Editar:", user);
     // Aqui você pode abrir um modal para edição
   };
-
+  
   const handleDelete = (user: User) => {
     console.log("Deletar:", user);
     // Aqui você pode chamar uma API para deletar o usuário
-  };
+  }; */
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Box
@@ -174,8 +175,6 @@ const Usuarios = () => {
             columns={columns}
             rows={userList}
             getRowId={(row) => row.id_usuario}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
           />
         </Box>
       </Box>

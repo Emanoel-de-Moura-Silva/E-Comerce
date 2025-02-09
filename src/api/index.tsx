@@ -9,7 +9,7 @@ const apiBaseUrl = (): string => {
     console.warn("REACT_APP_API_BASE não encontrada ou inválida.");
   }
 
-  return "http://localhost:3000/";
+  return "http://26.36.192.14:8000";
 };
 
 const api = axios.create({
