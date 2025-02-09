@@ -11,8 +11,8 @@ function App() {
         <MenuList />
         <Box
           sx={{
-            marginLeft: "240px",
-            padding: 2,
+            marginLeft: "200px",
+            padding: 4,
           }}
         >
           <AppRoutes />
