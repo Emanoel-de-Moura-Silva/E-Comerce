@@ -3,7 +3,7 @@ import { User } from "../models/User";
 
 const GetListUser = async (): Promise<User[]> => {
   try {
-    const response = await api.get("getTabela", {
+    const response = await api.get("/getTabela", {
       params: { tabelaa: "Usuarios" },
     });
     return response.data;

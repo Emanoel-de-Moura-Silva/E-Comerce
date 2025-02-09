@@ -171,11 +171,7 @@ const Usuarios = () => {
 
       <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <Box sx={{ width: "57%" }}>
-          <DataTable
-            columns={columns}
-            rows={userList}
-            getRowId={(row) => row.id_usuario}
-          />
+          <DataTable columns={columns} rows={userList} />
         </Box>
       </Box>
     </Box>
