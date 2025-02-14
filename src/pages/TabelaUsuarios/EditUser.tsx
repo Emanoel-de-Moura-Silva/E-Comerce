@@ -3,18 +3,29 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import GetListUser from "../../service/GetListUser";
 import { User } from "../../models/User";
+import UpdateUser from "../../service/UpdateUser";
 
 const EditUser = () => {
   const { id } = useParams();
-  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+
+  // Estados para os campos editáveis
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const users = await GetListUser();
         const selectedUser = users.find((u: User) => u.id === Number(id));
-        if (selectedUser) setUser(selectedUser);
+        if (selectedUser) {
+          setNome(selectedUser.nome);
+          setEmail(selectedUser.email);
+          setTelefone(selectedUser.telefone);
+          setDataNascimento(formatDateToInput(selectedUser.data_nascimento));
+        }
       } catch (error) {
         console.error("Erro ao buscar usuário:", error);
       }
@@ -23,15 +34,34 @@ const EditUser = () => {
     fetchUser();
   }, [id]);
 
-  if (!user) return <Box sx={{ paddingLeft: "3rem" }}>Carregando...</Box>;
-
   const formatDateToInput = (dateStr: string) => {
+    if (!dateStr.includes("/")) return dateStr;
+
     const [day, month, year] = dateStr.split("/");
     return `${year}-${month}-${day}`;
   };
 
   const handleCancel = () => {
     navigate("/usuarios");
+  };
+
+  const handleEdit = async () => {
+    try {
+      const updatedUser = {
+        id: Number(id),
+        nome,
+        email,
+        telefone,
+        data_nascimento: dataNascimento,
+      };
+
+      const edit = await UpdateUser(updatedUser);
+      if (edit) {
+        navigate("/usuarios");
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
 
   return (
@@ -54,11 +84,17 @@ const EditUser = () => {
             flexDirection: "row",
           }}
         >
-          <TextField sx={{ width: "30rem" }} label={"Nome"} value={user.nome} />
           <TextField
             sx={{ width: "30rem" }}
-            label={"Email"}
-            value={user.email}
+            label="Nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+          <TextField
+            sx={{ width: "30rem" }}
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Stack>
 
@@ -72,18 +108,16 @@ const EditUser = () => {
         >
           <TextField
             sx={{ width: "15rem" }}
-            label={"Telefone"}
-            value={user.telefone}
+            label="Telefone"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
           />
           <TextField
             sx={{ width: "15rem" }}
-            label={"Data de Nascimento"}
+            label="Data de Nascimento"
             type="date"
-            value={
-              user.data_nascimento
-                ? formatDateToInput(user.data_nascimento)
-                : ""
-            }
+            value={dataNascimento}
+            onChange={(e) => setDataNascimento(e.target.value)}
             slotProps={{
               htmlInput: {
                 maxLength: 10,
@@ -97,7 +131,7 @@ const EditUser = () => {
             <Button variant="outlined" onClick={handleCancel} color="error">
               Cancelar
             </Button>
-            <Button variant="contained" onClick={() => "ola"}>
+            <Button variant="contained" onClick={handleEdit}>
               Salvar Alterações
             </Button>
           </Stack>

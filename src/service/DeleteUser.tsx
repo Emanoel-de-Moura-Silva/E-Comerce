@@ -1,6 +1,6 @@
 import api from "../api";
 
-const deleteUser = async (id: number): Promise<string> => {
+const DeleteUser = async (id: number): Promise<string> => {
   try {
     const response = await api.delete("/deleteUsuarios", {
       data: { id },
@@ -13,4 +13,4 @@ const deleteUser = async (id: number): Promise<string> => {
   }
 };
 
-export default deleteUser;
+export default DeleteUser;

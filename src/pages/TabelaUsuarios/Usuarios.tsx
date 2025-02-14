@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import GetListUser from "../../service/GetListUser";
 import { useNavigate } from "react-router-dom";
 import CreateUser from "../../service/CreateUser";
-import deleteUser from "../../service/DeleteUser";
+import DeleteUser from "../../service/DeleteUser";
 
 const columns: GridColDef<User>[] = [
   { field: "id", headerName: "ID", width: 70 },
@@ -95,7 +95,7 @@ const Usuarios = () => {
     if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
 
     try {
-      await deleteUser(id);
+      await DeleteUser(id);
       const updatedRows = await GetListUser();
       setUserList(updatedRows);
     } catch (error) {
