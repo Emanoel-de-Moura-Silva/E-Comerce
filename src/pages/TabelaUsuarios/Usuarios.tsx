@@ -3,10 +3,10 @@ import DataTable from "../../components/Datatable";
 import { NewUser, User } from "../../models/User";
 import { GridColDef } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
-import GetListUser from "../../service/GetListUser";
 import { useNavigate } from "react-router-dom";
-import CreateUser from "../../service/CreateUser";
-import DeleteUser from "../../service/DeleteUser";
+import GetListUser from "../../service/Usuario/GetListUser";
+import CreateUser from "../../service/Usuario/CreateUser";
+import DeleteUser from "../../service/Usuario/DeleteUser";
 
 const columns: GridColDef<User>[] = [
   { field: "id", headerName: "ID", width: 70 },

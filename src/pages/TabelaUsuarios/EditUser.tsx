@@ -1,9 +1,9 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import GetListUser from "../../service/GetListUser";
 import { User } from "../../models/User";
-import UpdateUser from "../../service/UpdateUser";
+import GetListUser from "../../service/Usuario/GetListUser";
+import UpdateUser from "../../service/Usuario/UpdateUser";
 
 const EditUser = () => {
   const { id } = useParams();
