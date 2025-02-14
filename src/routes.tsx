@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Usuarios from "./pages/Usuarios";
+import Usuarios from "./pages/TabelaUsuarios/Usuarios";
 import Enderecos from "./pages/Enderecos";
 import Entrega from "./pages/Entrega";
 import Motoristas from "./pages/Motoristas";
@@ -7,12 +7,14 @@ import Pedido_Produto from "./pages/Pedido_Produto";
 import Pedidos from "./pages/Pedidos";
 import Produtos from "./pages/Produtos ";
 import Transportadoras from "./pages/Transportadoras";
+import EditUser from "./pages/TabelaUsuarios/EditUser";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/usuarios" />} />
       <Route path="/usuarios" element={<Usuarios />} />
+      <Route path="/editUser/:id" element={<EditUser />} />
       <Route path="/endereços" element={<Enderecos />} />
       <Route path="/entrega" element={<Entrega />} />
       <Route path="/motoristas" element={<Motoristas />} />

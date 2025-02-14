@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Box, List, ListItem, ListItemButton, Typography } from "@mui/material";
-import Logo from "../../public/GUY-EXPRESS.png";
+import Logo from "../assets/GUY-EXPRESS.png";
 
 const MenuList = () => {
   return (

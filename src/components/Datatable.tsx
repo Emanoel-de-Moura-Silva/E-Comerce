@@ -1,6 +1,8 @@
 import { DataGrid, GridColDef, GridValidRowModel } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface DataTableProps<T extends GridValidRowModel> {
   columns: GridColDef<T>[];
@@ -30,17 +32,18 @@ function DataTable<T extends GridValidRowModel>({
           color="primary"
           size="small"
           onClick={() => onEdit?.(params.row)}
-          sx={{ backgroundColor: "#b9844e" }}
+          sx={{ backgroundColor: "#b9844e", borderRadius: "1rem" }}
         >
-          Editar
+          <EditIcon />
         </Button>
         <Button
           variant="contained"
           color="error"
           size="small"
+          sx={{ borderRadius: "1rem" }}
           onClick={() => onDelete?.(params.row)}
         >
-          Deletar
+          <DeleteIcon />
         </Button>
       </Box>
     ),

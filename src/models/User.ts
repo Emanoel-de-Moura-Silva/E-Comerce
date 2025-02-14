@@ -5,3 +5,10 @@ export interface User {
   telefone: string;
   data_nascimento: string;
 }
+
+export interface NewUser {
+  nome: string;
+  email: string;
+  telefone: string;
+  data_nascimento: string;
+}

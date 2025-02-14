@@ -1,9 +1,12 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import DataTable from "../components/Datatable";
-import { User } from "../models/User";
+import DataTable from "../../components/Datatable";
+import { NewUser, User } from "../../models/User";
 import { GridColDef } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
-import GetListUser from "../service/GetListUser";
+import GetListUser from "../../service/GetListUser";
+import { useNavigate } from "react-router-dom";
+import CreateUser from "../../service/CreateUser";
+import deleteUser from "../../service/DeleteUser";
 
 const columns: GridColDef<User>[] = [
   { field: "id", headerName: "ID", width: 70 },
@@ -20,11 +23,12 @@ const Usuarios = () => {
   const [telefone, setTelefone] = useState<string>("");
   const [dataNascimento, setDataNascimento] = useState<string>("");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const updatedRows = await GetListUser();
-        console.log(updatedRows);
         setUserList(updatedRows);
       } catch (error) {
         console.error("Erro ao buscar usuários:", error);
@@ -58,19 +62,46 @@ const Usuarios = () => {
     }
   };
 
-  const handleCreate = () => {
-    return "deu certo ";
+  const handleEdit = (user: User) => {
+    if (user) {
+      navigate(`/editUser/${user.id}`);
+    }
   };
 
-  /*   const handleEdit = (user: User) => {
-    console.log("Editar:", user);
-    // Aqui você pode abrir um modal para edição
+  const handleCreate = async () => {
+    const novoUsuario: NewUser = {
+      nome,
+      email,
+      telefone,
+      data_nascimento: new Date(dataNascimento).toISOString().split("T")[0],
+    };
+
+    try {
+      const mensagem = await CreateUser(novoUsuario);
+      alert(mensagem);
+      handleClear(); //
+
+      const updatedRows = await GetListUser();
+      setUserList(updatedRows);
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
+      alert(
+        "Erro ao cadastrar usuário. Verifique o console para mais detalhes."
+      );
+    }
   };
-  
-  const handleDelete = (user: User) => {
-    console.log("Deletar:", user);
-    // Aqui você pode chamar uma API para deletar o usuário
-  }; */
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
+
+    try {
+      await deleteUser(id);
+      const updatedRows = await GetListUser();
+      setUserList(updatedRows);
+    } catch (error) {
+      console.error("Erro ao deletar usuário:", error);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -143,7 +174,7 @@ const Usuarios = () => {
             gap: "1rem",
           }}
         >
-          <Button variant="outlined" onClick={handleClear}>
+          <Button variant="outlined" onClick={handleClear} color="error">
             Limpar
           </Button>
           <Button
@@ -176,6 +207,8 @@ const Usuarios = () => {
             columns={columns}
             rows={userList}
             getRowId={(row) => row.id}
+            onDelete={(user) => handleDelete(user.id)}
+            onEdit={handleEdit}
           />
         </Box>
       </Box>
