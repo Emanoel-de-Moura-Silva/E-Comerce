@@ -1,5 +1,4 @@
-import api from "../api";
-
+import api from "../../api";
 const DeleteUser = async (id: number): Promise<string> => {
   try {
     const response = await api.delete("/deleteUsuarios", {

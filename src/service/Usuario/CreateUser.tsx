@@ -1,5 +1,5 @@
-import api from "../api";
-import { NewUser } from "../models/User";
+import api from "../../api";
+import { NewUser } from "../../models/User";
 
 const CreateUser = async (usuario: NewUser): Promise<string> => {
   try {

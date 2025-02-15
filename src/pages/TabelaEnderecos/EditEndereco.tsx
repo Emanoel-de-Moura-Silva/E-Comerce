@@ -5,7 +5,7 @@ import { User } from "../../models/User";
 import GetListUser from "../../service/Usuario/GetListUser";
 import UpdateUser from "../../service/Usuario/UpdateUser";
 
-const EditUser = () => {
+const EditEndereco = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -140,4 +140,4 @@ const EditUser = () => {
   );
 };
 
-export default EditUser;
+export default EditEndereco;

@@ -1,37 +1,37 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import DataTable from "../../components/Datatable";
-import { NewUser, User } from "../../models/User";
 import { GridColDef } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import GetListUser from "../../service/Usuario/GetListUser";
-import DeleteUser from "../../service/Usuario/DeleteUser";
-import CreateUser from "../../service/Usuario/CreateUser";
+import { Endereco, newEndereco } from "../../models/Endereco";
+import GetListEndereco from "../../service/Endereco/GetListEndereco";
+import CreateEndereco from "../../service/Endereco/CreateEndereco";
+import DeleteEndereco from "../../service/Endereco/DeleteEndereco";
 
-const columns: GridColDef<User>[] = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "nome", headerName: "Nome", width: 180 },
-  { field: "email", headerName: "Email", width: 240 },
-  { field: "telefone", headerName: "Telefone", width: 170 },
-  { field: "data_nascimento", headerName: "Data de Nascimento", width: 180 },
+const columns: GridColDef<Endereco>[] = [
+  { field: "id_usuario", headerName: "ID", width: 70 },
+  { field: "rua", headerName: "RUA", width: 180 },
+  { field: "cidade", headerName: "Cidade", width: 240 },
+  { field: "estado", headerName: "Estado", width: 170 },
+  { field: "cep", headerName: "CEP", width: 180 },
 ];
 
 const Usuarios = () => {
-  const [userList, setUserList] = useState<User[]>([]);
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState<string>("");
-  const [dataNascimento, setDataNascimento] = useState<string>("");
+  const [EnderecoList, setEnderecoList] = useState<Endereco[]>([]);
+  const [rua, setRua] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState<string>("");
+  const [cep, setCep] = useState<string>("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const updatedRows = await GetListUser();
-        setUserList(updatedRows);
+        const updatedRows = await GetListEndereco();
+        setEnderecoList(updatedRows);
       } catch (error) {
-        console.error("Erro ao buscar usuários:", error);
+        console.error("Erro ao buscar Endereço:", error);
       }
     };
 
@@ -40,66 +40,59 @@ const Usuarios = () => {
 
   const handleSubmit = () => {
     const payload = {
-      nome,
-      email,
-      telefone,
-      data_nascimento: new Date(dataNascimento).toISOString(),
+      rua,
+      cidade,
+      estado,
+      cep,
     };
     console.log(payload);
   };
 
   const handleClear = () => {
-    setNome("");
-    setEmail("");
-    setTelefone("");
-    setDataNascimento("");
+    setRua("");
+    setCidade("");
+    setEstado("");
+    setCep("");
   };
 
-  const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numericValue = e.target.value.replace(/\D/g, "");
-    if (numericValue.length <= 11) {
-      setTelefone(numericValue);
-    }
-  };
-
-  const handleEdit = (user: User) => {
-    if (user) {
-      navigate(`/editUser/${user.id}`);
+  const handleEdit = (props: Endereco) => {
+    if (props) {
+      navigate(`/editEndereco/${props.id_usuario}`);
     }
   };
 
   const handleCreate = async () => {
-    const novoUsuario: NewUser = {
-      nome,
-      email,
-      telefone,
-      data_nascimento: new Date(dataNascimento).toISOString().split("T")[0],
+    const novoCreateEndereco: newEndereco = {
+      rua,
+      cidade,
+      estado,
+      cep,
     };
 
     try {
-      const mensagem = await CreateUser(novoUsuario);
+      const mensagem = await CreateEndereco(novoCreateEndereco);
       alert(mensagem);
-      handleClear(); //
-
-      const updatedRows = await GetListUser();
-      setUserList(updatedRows);
+      handleClear();
+      const updatedRows = await GetListEndereco();
+      setEnderecoList(updatedRows);
     } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
+      console.error("Erro ao cadastrar Endereço:", error);
       alert(
-        "Erro ao cadastrar usuário. Verifique o console para mais detalhes."
+        "Erro ao cadastrar Endereço. Verifique o console para mais detalhes."
       );
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
+    if (!window.confirm("Tem certeza que deseja excluir este Endereço?"))
+      return;
 
     try {
-      await DeleteUser(id);
-      const updatedRows = await GetListUser();
-      setUserList(updatedRows);
+      await DeleteEndereco(id);
+      const updatedRows = await GetListEndereco();
+      setEnderecoList(updatedRows);
     } catch (error) {
-      console.error("Erro ao deletar usuário:", error);
+      console.error("Erro ao deletar Endereço:", error);
     }
   };
 
@@ -115,18 +108,18 @@ const Usuarios = () => {
       >
         <TextField
           sx={{ width: "30rem" }}
-          label={"Nome"}
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
+          label={"Rua"}
+          value={rua}
+          onChange={(e) => setRua(e.target.value)}
           slotProps={{
             htmlInput: { maxLength: 50 },
           }}
         />
         <TextField
           sx={{ width: "30rem" }}
-          label={"Email"}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          label={"Cidade"}
+          value={cidade}
+          onChange={(e) => setCidade(e.target.value)}
           slotProps={{
             htmlInput: { maxLength: 100 },
           }}
@@ -142,9 +135,9 @@ const Usuarios = () => {
       >
         <TextField
           sx={{ width: "15rem" }}
-          label={"Telefone"}
-          value={telefone}
-          onChange={handleTelefoneChange}
+          label={"Estado"}
+          value={estado}
+          onChange={(e) => setEstado(e.target.value)}
           slotProps={{
             htmlInput: {
               maxLength: 11,
@@ -153,15 +146,11 @@ const Usuarios = () => {
         />
         <TextField
           sx={{ width: "15rem" }}
-          label={"Data de Nascimento"}
-          type="date"
-          value={dataNascimento}
-          onChange={(e) => setDataNascimento(e.target.value)}
-          slotProps={{
-            htmlInput: {
-              maxLength: 10,
-            },
-            inputLabel: { shrink: true },
+          label={"CEP"}
+          value={cep}
+          onChange={(e) => {
+            const numericValue = e.target.value.replace(/\D/g, "");
+            setCep(numericValue);
           }}
         />
         <Stack
@@ -197,7 +186,7 @@ const Usuarios = () => {
         }}
       >
         <Typography variant="h6" component="h2">
-          Lista de Usuários
+          Lista de Endereços
         </Typography>
       </Box>
 
@@ -205,9 +194,9 @@ const Usuarios = () => {
         <Box sx={{ width: "64%" }}>
           <DataTable
             columns={columns}
-            rows={userList}
-            getRowId={(row) => row.id}
-            onDelete={(user) => handleDelete(user.id)}
+            rows={EnderecoList}
+            getRowId={(row) => row.id_usuario}
+            onDelete={(props) => handleDelete(props.id_usuario)}
             onEdit={handleEdit}
           />
         </Box>
