@@ -1,12 +1,22 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import DataTable from "../../components/Datatable";
 import { GridColDef } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Endereco, newEndereco } from "../../models/Endereco";
+import { Endereco } from "../../models/Endereco";
 import GetListEndereco from "../../service/Endereco/GetListEndereco";
 import CreateEndereco from "../../service/Endereco/CreateEndereco";
 import DeleteEndereco from "../../service/Endereco/DeleteEndereco";
+import { User } from "../../models/User";
+import GetListUser from "../../service/Usuario/GetListUser";
 
 const columns: GridColDef<Endereco>[] = [
   { field: "id_usuario", headerName: "ID", width: 70 },
@@ -22,6 +32,8 @@ const Usuarios = () => {
   const [cidade, setCidade] = useState("");
   const [estado, setEstado] = useState<string>("");
   const [cep, setCep] = useState<string>("");
+  const [id_usuario, setId_Usuario] = useState(0);
+  const [UserList, setUserList] = useState<User[]>([]);
 
   const navigate = useNavigate();
 
@@ -30,6 +42,8 @@ const Usuarios = () => {
       try {
         const updatedRows = await GetListEndereco();
         setEnderecoList(updatedRows);
+        const updatedRowsUser = await GetListUser();
+        setUserList(updatedRowsUser);
       } catch (error) {
         console.error("Erro ao buscar Endereço:", error);
       }
@@ -53,16 +67,18 @@ const Usuarios = () => {
     setCidade("");
     setEstado("");
     setCep("");
+    setId_Usuario(0);
   };
 
   const handleEdit = (props: Endereco) => {
     if (props) {
-      navigate(`/editEndereco/${props.id_usuario}`);
+      navigate(`/editEndereços/${props.id_usuario}`);
     }
   };
 
   const handleCreate = async () => {
-    const novoCreateEndereco: newEndereco = {
+    const novoCreateEndereco: Endereco = {
+      id_usuario,
       rua,
       cidade,
       estado,
@@ -106,6 +122,19 @@ const Usuarios = () => {
           justifyContent: "center",
         }}
       >
+        <Select
+          sx={{ width: "20rem" }}
+          value={id_usuario}
+          onChange={(e) => setId_Usuario(e.target.value as number)}
+        >
+          <MenuItem value={0}>Selecione um usuário</MenuItem>
+          {UserList.map((user) => (
+            <MenuItem key={user.id} value={user.id}>
+              {user.nome}
+            </MenuItem>
+          ))}
+        </Select>
+
         <TextField
           sx={{ width: "30rem" }}
           label={"Rua"}

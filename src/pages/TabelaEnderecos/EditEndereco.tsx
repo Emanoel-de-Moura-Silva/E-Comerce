@@ -1,68 +1,76 @@
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Box, Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Endereco } from "../../models/Endereco";
+import GetListEndereco from "../../service/Endereco/GetListEndereco";
+import GetUserList from "../../service/Usuario/GetListUser";
 import { User } from "../../models/User";
-import GetListUser from "../../service/Usuario/GetListUser";
-import UpdateUser from "../../service/Usuario/UpdateUser";
 
 const EditEndereco = () => {
-  const { id } = useParams();
+  const { id } = useParams<string>();
   const navigate = useNavigate();
 
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [dataNascimento, setDataNascimento] = useState("");
+  const [rua, setRua] = useState<string>("");
+  const [cidade, setCidade] = useState<string>("");
+  const [estado, setEstado] = useState<string>("");
+  const [cep, setCep] = useState<string>("");
+  const [userList, setUserList] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | string>(
+    Number(id)
+  );
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetch = async () => {
       try {
-        const users = await GetListUser();
-        const selectedUser = users.find((u: User) => u.id === Number(id));
-        if (selectedUser) {
-          setNome(selectedUser.nome);
-          setEmail(selectedUser.email);
-          setTelefone(selectedUser.telefone);
-          setDataNascimento(formatDateToInput(selectedUser.data_nascimento));
+        const enderecos = await GetListEndereco();
+        const selectedEndereco = enderecos.find(
+          (d: Endereco) => d.id_usuario === Number(id)
+        );
+
+        if (selectedEndereco) {
+          setRua(selectedEndereco.rua);
+          setCidade(selectedEndereco.cidade);
+          setEstado(selectedEndereco.estado);
+          setCep(selectedEndereco.cep);
+          setSelectedUserId(selectedEndereco.id_usuario);
         }
+
+        const users = await GetUserList();
+        setUserList(users);
       } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
+        console.error("Erro ao buscar informações:", error);
       }
     };
 
-    fetchUser();
+    fetch();
   }, [id]);
 
-  const formatDateToInput = (dateStr: string) => {
-    if (!dateStr.includes("/")) return dateStr;
-
-    const [day, month, year] = dateStr.split("/");
-    return `${year}-${month}-${day}`;
-  };
-
   const handleCancel = () => {
-    navigate("/usuarios");
+    navigate("/endereços");
   };
 
-  const handleEdit = async () => {
-    try {
-      const updatedUser = {
-        id: Number(id),
-        nome,
-        email,
-        telefone,
-        data_nascimento: dataNascimento,
-      };
+  /*   const handleEdit = async () => {  
+    try {  
+      const updatedEndereco = {  
+        id_usuario: Number(selectedUserId),  
+        rua,  
+        cidade,  
+        estado,  
+        cep,  
+      };  
 
-      const edit = await UpdateUser(updatedUser);
-      if (edit) {
-        navigate("/usuarios");
-      }
-    } catch (error) {
-      console.log("Error: ", error);
-    }
-  };
+      const edit = await UpdateEndereco(updatedEndereco);  
+      if (edit) {  
+        navigate("/endereços");  
+       }  
 
+      console.log("Atualizações feitas:", updatedEndereco); 
+
+    } catch (error) {  
+      console.error("Error: ", error);  
+    }  
+  };  
+ */
   return (
     <Box>
       <Box
@@ -83,17 +91,30 @@ const EditEndereco = () => {
             flexDirection: "row",
           }}
         >
+          <Select
+            sx={{ width: "20rem" }}
+            value={selectedUserId}
+            onChange={(e) => setSelectedUserId(e.target.value)}
+          >
+            <MenuItem value={id}>{id}</MenuItem>
+            {userList.map((user) => (
+              <MenuItem key={user.id} value={user.id}>
+                {user.id} - {user.nome}
+              </MenuItem>
+            ))}
+          </Select>
+
           <TextField
             sx={{ width: "30rem" }}
-            label="Nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            label="Rua"
+            value={rua}
+            onChange={(e) => setRua(e.target.value)}
           />
           <TextField
             sx={{ width: "30rem" }}
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="Cidade"
+            value={cidade}
+            onChange={(e) => setCidade(e.target.value)}
           />
         </Stack>
 
@@ -107,22 +128,15 @@ const EditEndereco = () => {
         >
           <TextField
             sx={{ width: "15rem" }}
-            label="Telefone"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
+            label="Estado"
+            value={estado}
+            onChange={(e) => setEstado(e.target.value)}
           />
           <TextField
             sx={{ width: "15rem" }}
-            label="Data de Nascimento"
-            type="date"
-            value={dataNascimento}
-            onChange={(e) => setDataNascimento(e.target.value)}
-            slotProps={{
-              htmlInput: {
-                maxLength: 10,
-              },
-              inputLabel: { shrink: true },
-            }}
+            label="CEP"
+            value={cep}
+            onChange={(e) => setCep(e.target.value)}
           />
           <Stack
             sx={{ paddingLeft: "5rem", flexDirection: "row", gap: "1rem" }}
@@ -130,7 +144,7 @@ const EditEndereco = () => {
             <Button variant="outlined" onClick={handleCancel} color="error">
               Cancelar
             </Button>
-            <Button variant="contained" onClick={handleEdit}>
+            <Button variant="contained" onClick={() => ""}>
               Salvar Alterações
             </Button>
           </Stack>

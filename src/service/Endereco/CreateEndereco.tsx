@@ -1,7 +1,7 @@
 import api from "../../api";
-import { newEndereco } from "../../models/Endereco";
+import { Endereco } from "../../models/Endereco";
 
-const CreateEndereco = async (porps: newEndereco): Promise<string> => {
+const CreateEndereco = async (porps: Endereco): Promise<string> => {
   try {
     const response = await api.post("postEnderecos", porps);
 
