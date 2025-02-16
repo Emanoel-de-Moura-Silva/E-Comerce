@@ -7,8 +7,6 @@ const GetListUser = async (): Promise<User[]> => {
       params: { tabelaa: "Usuarios" },
     });
 
-    console.log("Resposta da API:", response.data);
-
     const updatedRows = response.data.map((user: User[]) => ({
       id: user[0],
       nome: user[1],

@@ -19,7 +19,8 @@ import { User } from "../../models/User";
 import GetListUser from "../../service/Usuario/GetListUser";
 
 const columns: GridColDef<Endereco>[] = [
-  { field: "id_usuario", headerName: "ID", width: 70 },
+  { field: "id_endereco", headerName: "ID_Endereço", width: 120 },
+  { field: "id_usuario", headerName: "ID_Usuario", width: 90 },
   { field: "rua", headerName: "RUA", width: 180 },
   { field: "cidade", headerName: "Cidade", width: 240 },
   { field: "estado", headerName: "Estado", width: 170 },
@@ -42,10 +43,16 @@ const Usuarios = () => {
       try {
         const updatedRows = await GetListEndereco();
         setEnderecoList(updatedRows);
+
         const updatedRowsUser = await GetListUser();
-        setUserList(updatedRowsUser);
+        if (!Array.isArray(updatedRowsUser)) {
+          console.error("Erro: GetListUser não retornou uma lista!");
+          return;
+        }
+
+        setUserList([...updatedRowsUser]);
       } catch (error) {
-        console.error("Erro ao buscar Endereço:", error);
+        console.error("Erro ao buscar dados:", error);
       }
     };
 
@@ -130,7 +137,7 @@ const Usuarios = () => {
           <MenuItem value={0}>Selecione um usuário</MenuItem>
           {UserList.map((user) => (
             <MenuItem key={user.id} value={user.id}>
-              {user.nome}
+              {user.id} - {user.nome}
             </MenuItem>
           ))}
         </Select>
@@ -220,12 +227,12 @@ const Usuarios = () => {
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-        <Box sx={{ width: "64%" }}>
+        <Box sx={{ width: "75%" }}>
           <DataTable
             columns={columns}
             rows={EnderecoList}
-            getRowId={(row) => row.id_usuario}
-            onDelete={(props) => handleDelete(props.id_usuario)}
+            getRowId={(row) => row.id_endereco ?? 0}
+            onDelete={(props) => handleDelete(props.id_endereco ?? 0)}
             onEdit={handleEdit}
           />
         </Box>

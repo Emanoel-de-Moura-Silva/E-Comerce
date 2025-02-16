@@ -5,6 +5,7 @@ import { Endereco } from "../../models/Endereco";
 import GetListEndereco from "../../service/Endereco/GetListEndereco";
 import GetUserList from "../../service/Usuario/GetListUser";
 import { User } from "../../models/User";
+import UpdateEndereco from "../../service/Endereco/UpdateEndereco";
 
 const EditEndereco = () => {
   const { id } = useParams<string>();
@@ -49,28 +50,28 @@ const EditEndereco = () => {
     navigate("/endereços");
   };
 
-  /*   const handleEdit = async () => {  
-    try {  
-      const updatedEndereco = {  
-        id_usuario: Number(selectedUserId),  
-        rua,  
-        cidade,  
-        estado,  
-        cep,  
-      };  
+  const handleEdit = async () => {
+    try {
+      const updatedEndereco = {
+        id_endereco: Number(id),
+        id_usuario: Number(selectedUserId),
+        rua,
+        cidade,
+        estado,
+        cep,
+      };
 
-      const edit = await UpdateEndereco(updatedEndereco);  
-      if (edit) {  
-        navigate("/endereços");  
-       }  
+      const edit = await UpdateEndereco(updatedEndereco);
+      if (edit) {
+        navigate("/endereços");
+      }
 
-      console.log("Atualizações feitas:", updatedEndereco); 
+      console.log("Atualizações feitas:", updatedEndereco);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
 
-    } catch (error) {  
-      console.error("Error: ", error);  
-    }  
-  };  
- */
   return (
     <Box>
       <Box
@@ -144,7 +145,7 @@ const EditEndereco = () => {
             <Button variant="outlined" onClick={handleCancel} color="error">
               Cancelar
             </Button>
-            <Button variant="contained" onClick={() => ""}>
+            <Button variant="contained" onClick={handleEdit}>
               Salvar Alterações
             </Button>
           </Stack>
