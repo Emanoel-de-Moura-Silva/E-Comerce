@@ -17,6 +17,7 @@ import CreateEndereco from "../../service/Endereco/CreateEndereco";
 import DeleteEndereco from "../../service/Endereco/DeleteEndereco";
 import { User } from "../../models/User";
 import GetListUser from "../../service/Usuario/GetListUser";
+import SearchEndereco from "../../service/Endereco/SearchEndereco";
 
 const columns: GridColDef<Endereco>[] = [
   { field: "id_endereco", headerName: "ID_Endereço", width: 120 },
@@ -27,7 +28,7 @@ const columns: GridColDef<Endereco>[] = [
   { field: "cep", headerName: "CEP", width: 180 },
 ];
 
-const Usuarios = () => {
+const Enderecos = () => {
   const [EnderecoList, setEnderecoList] = useState<Endereco[]>([]);
   const [rua, setRua] = useState("");
   const [cidade, setCidade] = useState("");
@@ -37,13 +38,11 @@ const Usuarios = () => {
   const [UserList, setUserList] = useState<User[]>([]);
 
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const updatedRows = await GetListEndereco();
         setEnderecoList(updatedRows);
-
         const updatedRowsUser = await GetListUser();
         if (!Array.isArray(updatedRowsUser)) {
           console.error("Erro: GetListUser não retornou uma lista!");
@@ -59,14 +58,39 @@ const Usuarios = () => {
     fetchUsers();
   }, []);
 
-  const handleSubmit = () => {
-    const payload = {
+  const handleSubmit = async () => {
+    const filtros = {
+      id_endereco: 0,
+      id_usuario,
       rua,
       cidade,
       estado,
       cep,
     };
-    console.log(payload);
+
+    try {
+      const response = await SearchEndereco(filtros);
+
+      if (!Array.isArray(response)) {
+        console.error("Erro: SearchEndereco não retornou uma lista válida!");
+        return;
+      }
+
+      const formattedData = response.map((item) => ({
+        id_endereco: item[0],
+        id_usuario: item[1],
+        rua: item[2],
+        cidade: item[3],
+        estado: item[4],
+        cep: item[5],
+      }));
+
+      setEnderecoList(formattedData);
+      console.log("Estado atualizado:", formattedData);
+    } catch (error) {
+      console.error("Erro ao buscar endereços:", error);
+      alert("Erro ao buscar endereços.");
+    }
   };
 
   const handleClear = () => {
@@ -241,4 +265,4 @@ const Usuarios = () => {
   );
 };
 
-export default Usuarios;
+export default Enderecos;

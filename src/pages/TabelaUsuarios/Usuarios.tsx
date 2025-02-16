@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import GetListUser from "../../service/Usuario/GetListUser";
 import DeleteUser from "../../service/Usuario/DeleteUser";
 import CreateUser from "../../service/Usuario/CreateUser";
+import SearchUser from "../../service/Usuario/SearchUser";
 
 const columns: GridColDef<User>[] = [
   { field: "id", headerName: "ID", width: 70 },
@@ -38,14 +39,30 @@ const Usuarios = () => {
     fetchUsers();
   }, []);
 
-  const handleSubmit = () => {
-    const payload = {
+  const handleSubmit = async () => {
+    const filtros = {
       nome,
       email,
       telefone,
-      data_nascimento: new Date(dataNascimento).toISOString(),
+      data_nascimento: dataNascimento,
     };
-    console.log(payload);
+
+    try {
+      const usuarios = await SearchUser(filtros);
+
+      const usuariosFormatados = usuarios.map((user: User[]) => ({
+        id: user[0],
+        nome: user[1],
+        email: user[2],
+        telefone: user[3],
+        data_nascimento: user[4],
+      }));
+
+      setUserList(usuariosFormatados);
+    } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
+      alert("Erro ao buscar usuários.");
+    }
   };
 
   const handleClear = () => {
@@ -206,8 +223,8 @@ const Usuarios = () => {
           <DataTable
             columns={columns}
             rows={userList}
-            getRowId={(row) => row.id}
-            onDelete={(user) => handleDelete(user.id)}
+            getRowId={(row) => row.id ?? 0}
+            onDelete={(user) => handleDelete(Number(user.id))}
             onEdit={handleEdit}
           />
         </Box>

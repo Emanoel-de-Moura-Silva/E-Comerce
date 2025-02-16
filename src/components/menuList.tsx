@@ -30,7 +30,7 @@ const MenuList = () => {
           src={Logo}
           alt="Logo"
           style={{
-            width: "83%",
+            width: "100%",
             height: "auto",
             justifyContent: "center",
             borderRadius: "1rem",

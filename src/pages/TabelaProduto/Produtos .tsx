@@ -7,9 +7,10 @@ import { Produto } from "../../models/Produto";
 import GetListProduto from "../../service/Produto/GetListProduto";
 import CreateProduto from "../../service/Produto/CreateProduto";
 import DeleteProduto from "../../service/Produto/DeleteProduto";
+import SearchProduto from "../../service/Produto/SearchProduto";
 
 const columns: GridColDef<Produto>[] = [
-  { field: "id_produto", headerName: "ID_Produto", width: 90 },
+  { field: "id_produto", headerName: "ID_Produto", width: 120 },
   { field: "nome", headerName: "Nome", width: 180 },
   { field: "preco", headerName: "Preço ", width: 240 },
   { field: "categoria", headerName: "Categoria", width: 170 },
@@ -38,9 +39,30 @@ const Usuarios = () => {
     fetchUsers();
   }, []);
 
-  const handleSubmit = () => {
-    const payload = {};
-    console.log(payload);
+  const handleSubmit = async () => {
+    const filtros = {
+      nome,
+      preco,
+      categoria,
+      estoque,
+    };
+
+    try {
+      const Endereco = await SearchProduto(filtros);
+
+      const EnderecoFormatados = Endereco.map((props: Produto[]) => ({
+        id_produto: props[0],
+        nome: props[1],
+        preco: props[2],
+        categoria: props[3],
+        estoque: props[4],
+      }));
+
+      setProdutoList(EnderecoFormatados);
+    } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
+      alert("Erro ao buscar usuários.");
+    }
   };
 
   const handleClear = () => {
@@ -185,7 +207,7 @@ const Usuarios = () => {
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-        <Box sx={{ width: "75%" }}>
+        <Box sx={{ width: "66%" }}>
           <DataTable
             columns={columns}
             rows={produtoList}
