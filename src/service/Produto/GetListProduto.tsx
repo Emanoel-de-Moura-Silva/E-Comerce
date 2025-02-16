@@ -1,7 +1,7 @@
 import api from "../../api";
 import { Produto } from "../../models/Produto";
 
-const GetListEndereco = async (): Promise<Produto[]> => {
+const GetListProduto = async (): Promise<Produto[]> => {
   try {
     const response = await api.get("/getProdutos", {
       params: { tabelaa: "Produtos" },
@@ -24,4 +24,4 @@ const GetListEndereco = async (): Promise<Produto[]> => {
   }
 };
 
-export default GetListEndereco;
+export default GetListProduto;
